@@ -1,61 +1,37 @@
-﻿using LicenseIdentifiers;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace Generator
 {
     class Program
     {
+        private const string LICENSES_URI = "../../../../../license-list-data/json/licenses.json";
+        private const string OUTPUT_LOCATION = "../../../../LicenseIdentifiers/LicenseIdentifier.cs";
+
         static void Main(string[] args)
         {
-            Regex illegalCharacters = new Regex("[^a-zA-Z0-9_]");
+            var data = Utils.ParseJson<LicensesList>(LICENSES_URI);
+            GenerateLicensesClass(data, OUTPUT_LOCATION);
+        }
 
-            const string URL = "../../../../../license-list-data/json/licenses.json";
-
-            var raw = File.ReadAllText(URL);
-            var data = JsonSerializer.Deserialize<LicensesList>(raw, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            string FormatIdToVariableName(string id)
-            {
-                var textSegments = id
-                    .Split('-')
-                    .Select(s =>
-                    {
-                        var first = s.First();
-
-                        if (first >= '0' && first <= '9')
-                        {
-                            return "_" + s;
-                        }
-
-                        return char.ToUpper(first) + s.Substring(1);
-                    })
-                    .ToArray();
-
-                var result = string.Join(string.Empty, textSegments).Replace('.', '_').Replace("+", "Plus");
-
-                return illegalCharacters.Replace(result, "");
-            };
-
-            using (StreamWriter outputFile = new StreamWriter("../../../../LicenseIdentifiers/LicenseIdentifier.cs"))
+        private static void GenerateLicensesClass(LicensesList data, string destination)
+        {
+            using (StreamWriter outputFile = new StreamWriter(destination))
             {
                 outputFile.Write(FileComponents.HEADER);
 
                 foreach (var license in data.Licenses)
                 {
-                    outputFile.Write(string.Format(FileComponents.LICENSE_DEFINITION,
-                        FormatIdToVariableName(license.LicenseId),
-                        license.Reference,
-                        license.IsDeprecatedLicenseId.ToString().ToLower(),
-                        license.DetailsUrl,
-                        license.ReferenceNumber,
-                        license.Name.Replace("\"", "\\\""),
-                        license.LicenseId,
-                        string.Join(',', license.SeeAlso.Select(value => $"\"{value}\"")),
-                        license.IsOsiApproved.ToString().ToLower()));
+                    outputFile.Write(
+                        string.Format(FileComponents.LICENSE_DEFINITION,
+                            Utils.TransformId(license.LicenseId),
+                            license.Reference,
+                            license.IsDeprecatedLicenseId.ToString().ToLower(),
+                            license.DetailsUrl,
+                            license.ReferenceNumber,
+                            license.Name.Replace("\"", "\\\""),
+                            license.LicenseId,
+                            Utils.TransformArrayValues(license.SeeAlso),
+                            license.IsOsiApproved.ToString().ToLower()));
                 }
 
                 outputFile.Write(FileComponents.LICENSE_CONSTRUCTOR);

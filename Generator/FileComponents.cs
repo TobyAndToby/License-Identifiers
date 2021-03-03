@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LicenseIdentifiers
+namespace Generator
 {
     public static class FileComponents
     {   
