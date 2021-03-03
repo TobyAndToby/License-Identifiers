@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net50</TargetFramework>
+    <Version>0.0.1</Version>
+    <Authors>Toby Bessant, Toby Smith</Authors>
+    <Description>A static enum-class of software license definitions generated using the SPDX license-list-data repository. Will be updated automatically with each new SPDX definition release.</Description>
+    <Company>TobyAndToby</Company>
+    <Copyright>TobyAndToby 2021</Copyright>
+    <PackageLicenseExpression>ISC</PackageLicenseExpression>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TobyAndToby/License-Identifiers</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>spdx, license</PackageTags>
   </PropertyGroup>
 
 </Project>
