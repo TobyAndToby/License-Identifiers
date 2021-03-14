@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator", "Generator\Generator.csproj", "{E6E9A2E9-E7F9-4CE3-A6EC-F7E30B87A643}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseIdentifiers", "LicenseIdentifiers\LicenseIdentifiers.csproj", "{4B110FD6-F35C-44FC-8F6B-3B81E1ED9AF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseIdentifiers", "LicenseIdentifiers\LicenseIdentifiers.csproj", "{4B110FD6-F35C-44FC-8F6B-3B81E1ED9AF0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B60EC7C5-91BC-463C-A6F1-AD713854A7F5}"
+	ProjectSection(SolutionItems) = preProject
+		GetVersion.ps1 = GetVersion.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
