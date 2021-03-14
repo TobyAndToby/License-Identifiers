@@ -17,7 +17,7 @@ namespace Generator
         public string Reference { get; set; }
         public bool IsDeprecatedLicenseId { get; set; }
         public string DetailsUrl { get; set; }
-        public int ReferenceNumber { get; set; }
+        public string ReferenceNumber { get; set; }
         public string Name { get; set; }
         public string LicenseId { get; set; }
         public List<string> SeeAlso { get; set; }
