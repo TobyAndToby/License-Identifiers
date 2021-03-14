@@ -1,16 +1,24 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Reflection;
 
 namespace Generator
 {
     class Program
     {
-        private const string LICENSES_URI = "../../../../../license-list-data/json/licenses.json";
         private const string OUTPUT_LOCATION = "../../../../LicenseIdentifiers/" + FileComponents.NAME;
+        private static readonly string licensesUri = GetExecutingDirectoryName() + "/../../../../../license-list-data/json/licenses.json";
 
         static void Main(string[] args)
         {
-            var data = Utils.ParseJson<LicensesList>(LICENSES_URI);
+            var data = Utils.ParseJson<LicensesList>(licensesUri);
             GenerateLicensesClass(data, OUTPUT_LOCATION);
+        }
+
+        public static string GetExecutingDirectoryName()
+        {
+            var location = new Uri(Assembly.GetEntryAssembly().GetName().CodeBase);
+            return new FileInfo(location.AbsolutePath).Directory.FullName;
         }
 
         private static void GenerateLicensesClass(LicensesList data, string destination)

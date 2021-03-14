@@ -9,8 +9,8 @@ namespace Generator
 {
     public static class Utils
     {
-        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        private static readonly Regex IllegalCharacters = new Regex("[^a-zA-Z0-9_]");
+        private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+        private static readonly Regex IllegalCharacters = new("[^a-zA-Z0-9_]");
 
         /// <summary>
         /// Given a JSON file location, read and parse into specified generic type. Logs exceptions.
@@ -20,7 +20,7 @@ namespace Generator
         /// <returns></returns>
         public static T ParseJson<T>(string fileLocation) where T : new()
         {
-            T data = new T();
+            T data = new();
 
             try
             {
