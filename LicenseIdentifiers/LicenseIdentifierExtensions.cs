@@ -13,23 +13,14 @@ namespace LicenseIdentifiers
         {
             var identifierType = typeof(LicenseIdentifier);
 
-            var allLicenses = identifierType
+            license = identifierType
                 .GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Where(t => t.FieldType == identifierType);
+                .Where(f => f.FieldType == identifierType)
+                .Select(f => f.GetValue(null))
+                .Cast<LicenseIdentifier>()  
+                .FirstOrDefault(f => f.LicenseId.ToLower() == licenseId.ToLower());
 
-            foreach (var licenseField in allLicenses)
-            {
-                var value = (LicenseIdentifier) licenseField.GetValue(null);
-
-                if (value.LicenseId.ToLower() == licenseId.ToLower())
-                {
-                    license = value;
-                    return true;
-                }
-            }
-
-            license = null;
-            return false;
+            return license != null;
         }
     }
 }
