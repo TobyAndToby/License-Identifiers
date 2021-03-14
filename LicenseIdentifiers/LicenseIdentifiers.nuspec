@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>LicenseIdentifiers</id>
+    <version>1.0.0</version>
+    <authors>TobyAndToby</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>http://github.com/TobyAndToby/License-Identifiers</projectUrl>
+    <description>SPDX-compliant license enum class.</description>
+    <releaseNotes>Initial release matching SPDX v3.12.</releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags>license</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="SampleDependency" version="1.0.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin/Release/net50/*.dll" target="lib" />
+  </files>
+</package>
