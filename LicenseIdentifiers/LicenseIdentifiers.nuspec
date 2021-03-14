@@ -2,22 +2,17 @@
 <package >
   <metadata>
     <id>LicenseIdentifiers</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <authors>TobyAndToby</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>http://github.com/TobyAndToby/License-Identifiers</projectUrl>
     <description>SPDX-compliant license enum class.</description>
-    <releaseNotes>Initial release matching SPDX v3.12.</releaseNotes>
+    <releaseNotes>Initial release matching SPDX v3.11.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>license</tags>
-    <dependencies>
-      <group targetFramework=".NETStandard2.1">
-        <dependency id="SampleDependency" version="1.0.0" />
-      </group>
-    </dependencies>
   </metadata>
   <files>
-    <file src="bin/Release/net50/*.dll" target="lib" />
+    <file src="bin/Release/net50/LicenseIdentifiers.dll" target="lib" />
   </files>
 </package>
