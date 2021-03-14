@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace LicenseIdentifiers
 {
-    public class LicenseIdentifier
+    public partial class LicenseIdentifier
     {
 		public static readonly LicenseIdentifier _0BSD = new LicenseIdentifier("./0BSD.html", false, "http://spdx.org/licenses/0BSD.json", "244", "BSD Zero Clause License", "0BSD", new List<string> { "http://landley.net/toybox/license.html" }, true);
 		public static readonly LicenseIdentifier AAL = new LicenseIdentifier("./AAL.html", false, "http://spdx.org/licenses/AAL.json", "59", "Attribution Assurance License", "AAL", new List<string> { "https://opensource.org/licenses/attribution" }, true);
