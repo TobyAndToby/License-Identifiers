@@ -3,7 +3,7 @@ $spdxReleases = Invoke-RestMethod -Uri $spdxReleasesUrl -ContentType "applicatio
 $latestSpdxRelease = $spdxReleases | Select-Object -First 1;
 $latestSpdxReleaseVersion = $latestSpdxRelease.tag_name;
 
-Rename-Item "../$latestSpdxReleaseVersion" "license-list-data";
+Move-Item -Path "../_spdx_license-list-data/$latestSpdxReleaseVersion" -Destination "../license-list-data"
 
 if ($latestSpdxReleaseVersion[0] -eq 'v')
 {
