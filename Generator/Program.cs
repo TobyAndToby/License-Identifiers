@@ -5,7 +5,7 @@ namespace Generator
     class Program
     {
         private const string LICENSES_URI = "../../../../../license-list-data/json/licenses.json";
-        private const string OUTPUT_LOCATION = "../../../../LicenseIdentifiers/LicenseIdentifier.cs";
+        private const string OUTPUT_LOCATION = "../../../../LicenseIdentifiers/" + FileComponents.NAME;
 
         static void Main(string[] args)
         {
@@ -18,6 +18,7 @@ namespace Generator
             using (StreamWriter outputFile = new StreamWriter(destination))
             {
                 outputFile.Write(FileComponents.HEADER);
+                outputFile.Write(FileComponents.USINGS);
 
                 foreach (var license in data.Licenses)
                 {
