@@ -1,6 +1,12 @@
 name: Generate, Build and Publish LicenseIdentifiers 
 
 on:
+ workflow_dispatch:
+   inputs:
+      versionOverride:
+        description: 'Version Override'     
+        required: false
+        
  schedule:
     - cron: "0 0 * * *"
 
@@ -25,7 +31,7 @@ jobs:
       run: dotnet build Generator.csproj --no-restore
 
     - name: Run
-      run: dotnet run Generator.csproj
+      run: dotnet run Generator.csproj -- ${{ github.event.inputs.versionOverride }}
       
     - name: Build LicenseIdentifiers
       run: dotnet build -c Release LicenseIdentifiers.csproj --no-restore
