@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace Generator.DTO
 {
-    public class Releases
+    public class Release
     {
         [JsonPropertyName("tag_name")]
         public string TagName { get; set; }
+
+        [JsonPropertyName("body")]
+        public string ReleaseDescription { get; set; }
     }
 }

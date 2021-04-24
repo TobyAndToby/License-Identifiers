@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package >
+<package>
   <metadata>
     <id>LicenseIdentifiers</id>
-    <version>1.0.2</version>
+    <version>3.12</version>
     <authors>TobyAndToby</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <license type="expression">ISC</license>
     <projectUrl>http://github.com/TobyAndToby/License-Identifiers</projectUrl>
-    <description>SPDX-compliant license enum class.</description>
-    <releaseNotes>Initial release matching SPDX v3.11.</releaseNotes>
-    <copyright>$copyright$</copyright>
-    <tags>license</tags>
+    <description>SPDX-compliant license enum class. Validate and parse all verified SPDX license identifiers from version SPDX 3.12.</description>
+    <releaseNotes>SPDX Data for the Version 3.12 of the license list
+
+See https://github.com/spdx/license-list-XML/releases/tag/v3.12 for summary of changes</releaseNotes>
+    <tags>license,licence,SPDX,OSS,parse</tags>
   </metadata>
   <files>
     <file src="bin/Release/net50/LicenseIdentifiers.dll" target="lib" />

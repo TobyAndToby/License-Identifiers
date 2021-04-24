@@ -40,11 +40,11 @@ namespace Generator
         /// Takes a license ID and formats it to be a valid C# variable name.
         /// <code>gpl-1.0+ -> GPL_1_0_PLUS</code>
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="licenseId"></param>
         /// <returns></returns>
-        public static string TransformId(string id)
+        public static string SanitiseLicenseId(string licenseId)
         {
-            var formattedId = id
+            var formattedId = licenseId
                 .Replace('-', '_')
                 .Replace('.', '_')
                 .Replace("+", "_PLUS")
@@ -62,12 +62,12 @@ namespace Generator
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static string TransformArrayValues(IEnumerable<string> source)
+        public static string SpreadArrayValues(IEnumerable<string> source)
         {
             return string.Join(',', source.Select(value => $"\"{value}\""));
         }
 
-        public static string GetFileFromZip(Stream data, string targetFilePath)
+        public static string GetFileContentsFromZip(Stream data, string targetFilePath)
         {
             using var zipArchive = new ZipArchive(data, ZipArchiveMode.Read);
             
