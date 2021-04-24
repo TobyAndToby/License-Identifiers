@@ -25,8 +25,9 @@ namespace Generator
             var spdxReleaseMetadata = await GetLatestSpdxReleaseMetadata();
             var spdxRelease = await GetSpdxRelease(spdxReleaseMetadata.TagName);
             GenerateLicensesClass(spdxRelease.Licenses, LICENSES_OUTPUT_LOCATION);
-            
-            await UpdateNuspecFile(spdxReleaseMetadata);
+
+            var versionOverride = args.Length > 0 ? args[0] : null;
+            await UpdateNuspecFile(spdxReleaseMetadata, versionOverride);
 
             Console.WriteLine("Done!");
         }
@@ -86,9 +87,9 @@ namespace Generator
             return Utils.ParseJson<LicensesList>(spdxLicensesContent);
         }
 
-        private static async Task UpdateNuspecFile(Release releaseMetadata)
+        private static async Task UpdateNuspecFile(Release releaseMetadata, string versionOverride = null)
         {
-            var version = releaseMetadata.TagName;
+            var version = string.IsNullOrEmpty(versionOverride) ? releaseMetadata.TagName : versionOverride;
             if (version.StartsWith('v'))
             {
                 version = version[1..];
