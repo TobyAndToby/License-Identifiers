@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Generator
@@ -12,8 +13,8 @@ namespace Generator
     class Program
     {
         private const string SPDX_RELEASES_URI = "https://api.github.com/repos/spdx/license-list-data/releases";
-        private const string LICENSES_OUTPUT_LOCATION = "../../../../LicenseIdentifiers/" + LicenseIdentifierFileComponents.NAME;
-        private const string NUSPEC_OUTPUT_LOCATION = "../../../../LicenseIdentifiers/LicenseIdentifiers.nuspec";
+        private static readonly string LICENSES_OUTPUT_LOCATION = GetExecutingDirectoryName() + "/../../../../LicenseIdentifiers/" + LicenseIdentifierFileComponents.NAME;
+        private static readonly string NUSPEC_OUTPUT_LOCATION = GetExecutingDirectoryName() + "/../../../../LicenseIdentifiers/LicenseIdentifiers.nuspec";
 
         private static readonly HttpClient client = new HttpClient();
 
@@ -97,6 +98,12 @@ namespace Generator
 
             var nuspecContents = NuspecGenerator.GenerateContent(version, releaseMetadata.ReleaseDescription);
             await File.WriteAllTextAsync(NUSPEC_OUTPUT_LOCATION, nuspecContents);
+        }
+
+        public static string GetExecutingDirectoryName()
+        {
+            var location = new Uri(Assembly.GetEntryAssembly().GetName().CodeBase);
+            return new FileInfo(location.AbsolutePath).Directory.FullName;
         }
     }
 }
