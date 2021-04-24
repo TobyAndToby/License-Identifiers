@@ -31,7 +31,7 @@ jobs:
       run: dotnet build Generator/Generator.csproj --no-restore
 
     - name: Run
-      run: dotnet run Generator/Generator.csproj -- ${{ github.event.inputs.versionOverride }}
+      run: dotnet run --project Generator/Generator.csproj -- ${{ github.event.inputs.versionOverride }}
       
     - name: Build LicenseIdentifiers
       run: dotnet build -c Release LicenseIdentifiers/LicenseIdentifiers.csproj --no-restore
