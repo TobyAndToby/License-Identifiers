@@ -19,7 +19,7 @@ namespace Generator
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <license type=""expression"">ISC</license>
     <projectUrl>http://github.com/TobyAndToby/License-Identifiers</projectUrl>
-    <description>SPDX-compliant license enum class. Validate and parse all verified SPDX license identifiers from version SPDX {version}.</description>
+    <description>SPDX-compliant license enum class. Validate and parse all verified SPDX license identifiers from SPDX version {version}.</description>
     <releaseNotes>{releaseDescription}</releaseNotes>
     <tags>license,licence,SPDX,OSS,parse</tags>
   </metadata>
