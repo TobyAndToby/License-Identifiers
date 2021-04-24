@@ -1,6 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net50</TargetFramework>
+    <Version>3.12</Version>
   </PropertyGroup>
 </Project>

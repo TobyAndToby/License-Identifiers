@@ -13,8 +13,9 @@ namespace Generator
     class Program
     {
         private const string SPDX_RELEASES_URI = "https://api.github.com/repos/spdx/license-list-data/releases";
-        private static readonly string LICENSES_OUTPUT_LOCATION = GetExecutingDirectoryName() + "/../../../../LicenseIdentifiers/" + LicenseIdentifierFileComponents.NAME;
-        private static readonly string NUSPEC_OUTPUT_LOCATION = GetExecutingDirectoryName() + "/../../../../LicenseIdentifiers/LicenseIdentifiers.nuspec";
+        private static readonly string LICENSES_OUTPUT_LOCATION = GetProjectFolderPath() + LicenseIdentifierFileComponents.NAME;
+        private static readonly string NUSPEC_OUTPUT_LOCATION = GetProjectFolderPath() + "LicenseIdentifiers.nuspec";
+        private static readonly string CSPROJ_OUTPUT_LOCATION = GetProjectFolderPath() + "LicenseIdentifiers.csproj";
 
         private static readonly HttpClient client = new HttpClient();
 
@@ -28,7 +29,10 @@ namespace Generator
             GenerateLicensesClass(spdxRelease.Licenses, LICENSES_OUTPUT_LOCATION);
 
             var versionOverride = args.Length > 0 ? args[0] : null;
-            await UpdateNuspecFile(spdxReleaseMetadata, versionOverride);
+            var version = GetVersion(spdxReleaseMetadata, versionOverride);
+
+            await UpdateNuspecFile(spdxReleaseMetadata, version);
+            await UpdateCsprojFile(spdxReleaseMetadata, version);
 
             Console.WriteLine("Done!");
         }
@@ -88,7 +92,19 @@ namespace Generator
             return Utils.ParseJson<LicensesList>(spdxLicensesContent);
         }
 
-        private static async Task UpdateNuspecFile(Release releaseMetadata, string versionOverride = null)
+        private static async Task UpdateNuspecFile(Release releaseMetadata, string version)
+        {
+            var nuspecContents = NuspecGenerator.GenerateContent(version, releaseMetadata.ReleaseDescription);
+            await File.WriteAllTextAsync(NUSPEC_OUTPUT_LOCATION, nuspecContents);
+        }
+
+        private static async Task UpdateCsprojFile(Release releaseMetadata, string version)
+        {
+            var csprojContents = CsprojGenerator.GenerateContent(version);
+            await File.WriteAllTextAsync(CSPROJ_OUTPUT_LOCATION, csprojContents);
+        }
+
+        private static string GetVersion(Release releaseMetadata, string versionOverride)
         {
             var version = string.IsNullOrEmpty(versionOverride) ? releaseMetadata.TagName : versionOverride;
             if (version.StartsWith('v'))
@@ -96,14 +112,13 @@ namespace Generator
                 version = version[1..];
             }
 
-            var nuspecContents = NuspecGenerator.GenerateContent(version, releaseMetadata.ReleaseDescription);
-            await File.WriteAllTextAsync(NUSPEC_OUTPUT_LOCATION, nuspecContents);
+            return version;
         }
 
-        public static string GetExecutingDirectoryName()
+        public static string GetProjectFolderPath()
         {
             var location = new Uri(Assembly.GetEntryAssembly().GetName().CodeBase);
-            return new FileInfo(location.AbsolutePath).Directory.FullName;
+            return new FileInfo(location.AbsolutePath).Directory.FullName + "/../../../../LicenseIdentifiers/";
         }
     }
 }
