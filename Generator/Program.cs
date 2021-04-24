@@ -15,7 +15,6 @@ namespace Generator
         private const string SPDX_RELEASES_URI = "https://api.github.com/repos/spdx/license-list-data/releases";
         private static readonly string LICENSES_OUTPUT_LOCATION = GetProjectFolderPath() + LicenseIdentifierFileComponents.NAME;
         private static readonly string NUSPEC_OUTPUT_LOCATION = GetProjectFolderPath() + "LicenseIdentifiers.nuspec";
-        private static readonly string CSPROJ_OUTPUT_LOCATION = GetProjectFolderPath() + "LicenseIdentifiers.csproj";
 
         private static readonly HttpClient client = new HttpClient();
 
@@ -31,8 +30,7 @@ namespace Generator
             var versionOverride = args.Length > 0 ? args[0] : null;
             var version = GetVersion(spdxReleaseMetadata, versionOverride);
 
-            await UpdateNuspecFile(spdxReleaseMetadata, version);
-            await UpdateCsprojFile(spdxReleaseMetadata, version);
+            await UpdateNuspecFile(spdxReleaseMetadata.ReleaseDescription, version);
 
             Console.WriteLine("Done!");
         }
@@ -92,16 +90,10 @@ namespace Generator
             return Utils.ParseJson<LicensesList>(spdxLicensesContent);
         }
 
-        private static async Task UpdateNuspecFile(Release releaseMetadata, string version)
+        private static async Task UpdateNuspecFile(string releaseDescription, string version)
         {
-            var nuspecContents = NuspecGenerator.GenerateContent(version, releaseMetadata.ReleaseDescription);
+            var nuspecContents = NuspecGenerator.GenerateContent(version, releaseDescription);
             await File.WriteAllTextAsync(NUSPEC_OUTPUT_LOCATION, nuspecContents);
-        }
-
-        private static async Task UpdateCsprojFile(Release releaseMetadata, string version)
-        {
-            var csprojContents = CsprojGenerator.GenerateContent(version);
-            await File.WriteAllTextAsync(CSPROJ_OUTPUT_LOCATION, csprojContents);
         }
 
         private static string GetVersion(Release releaseMetadata, string versionOverride)
