@@ -1,0 +1,37 @@
+name: Generate, Build and Publish LicenseIdentifiers 
+
+on:
+ schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build Generator.csproj --no-restore
+
+    - name: Run
+      run: dotnet run Generator.csproj
+      
+    - name: Build LicenseIdentifiers
+      run: dotnet build -c Release LicenseIdentifiers.csproj --no-restore
+      
+    - name: Pack LicenseIdentifiers
+      run: dotnet pack LicenseIdentifiers.csproj
+      
+    - name: Publish LicenseIdentifiers
+      run: dotnet nuget push *.nupkg --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
