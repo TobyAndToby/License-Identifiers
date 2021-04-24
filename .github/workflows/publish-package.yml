@@ -28,16 +28,16 @@ jobs:
       run: dotnet restore
       
     - name: Build
-      run: dotnet build Generator.csproj --no-restore
+      run: dotnet build Generator/Generator.csproj --no-restore
 
     - name: Run
-      run: dotnet run Generator.csproj -- ${{ github.event.inputs.versionOverride }}
+      run: dotnet run Generator/Generator.csproj -- ${{ github.event.inputs.versionOverride }}
       
     - name: Build LicenseIdentifiers
-      run: dotnet build -c Release LicenseIdentifiers.csproj --no-restore
+      run: dotnet build -c Release LicenseIdentifiers/LicenseIdentifiers.csproj --no-restore
       
     - name: Pack LicenseIdentifiers
-      run: dotnet pack LicenseIdentifiers.csproj
+      run: dotnet pack LicenseIdentifiers/LicenseIdentifiers.csproj
       
     - name: Publish LicenseIdentifiers
-      run: dotnet nuget push *.nupkg --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push LicenseIdentifiers/*.nupkg --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
