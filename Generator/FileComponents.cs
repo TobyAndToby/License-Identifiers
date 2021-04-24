@@ -15,11 +15,11 @@ namespace LicenseIdentifiers
     public partial class LicenseIdentifier
     {";
 
-        public static readonly string LICENSE_DEFINITION = Environment.NewLine + "\t\tpublic static readonly LicenseIdentifier {0} = new(\"{1}\", {2}, \"{3}\", \"{4}\", \"{5}\", \"{6}\", new List<string> {{ {7} }}, {8});";
+        public static readonly string LICENSE_DEFINITION = Environment.NewLine + "\t\tpublic static readonly LicenseIdentifier {0} = new(\"{1}\", {2}, \"{3}\", {4}, \"{5}\", \"{6}\", new List<string> {{ {7} }}, {8});";
 
         public const string LICENSE_CONSTRUCTOR = @"
 
-        private LicenseIdentifier(string reference, bool isDeprecatedLicenseId, string detailsUrl, string referenceNumber, string name, string licenseId, List<string> seeAlso, bool isOsiApproved)
+        private LicenseIdentifier(string reference, bool isDeprecatedLicenseId, string detailsUrl, int referenceNumber, string name, string licenseId, List<string> seeAlso, bool isOsiApproved)
         {
             Reference = reference;
             IsDeprecatedLicenseId = isDeprecatedLicenseId;
@@ -36,7 +36,7 @@ namespace LicenseIdentifiers
         public string Reference { get; set; }
         public bool IsDeprecatedLicenseId { get; set; }
         public string DetailsUrl { get; set; }
-        public string ReferenceNumber { get; set; }
+        public int ReferenceNumber { get; set; }
         public string Name { get; set; }
         public string LicenseId { get; set; }
         public List<string> SeeAlso { get; set; }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -18,13 +20,12 @@ namespace Generator
         /// <typeparam name="T"></typeparam>
         /// <param name="fileLocation"></param>
         /// <returns></returns>
-        public static T ParseJson<T>(string fileLocation) where T : new()
+        public static T ParseJson<T>(string raw) where T : new()
         {
-            T data = new T();
+            var data = new T();
 
             try
             {
-                var raw = File.ReadAllText(fileLocation);
                 data = JsonSerializer.Deserialize<T>(raw, JsonOptions);
             }
             catch (Exception e)
@@ -64,6 +65,27 @@ namespace Generator
         public static string TransformArrayValues(IEnumerable<string> source)
         {
             return string.Join(',', source.Select(value => $"\"{value}\""));
+        }
+
+        public static string GetFileFromZip(Stream data, string targetFilePath)
+        {
+            using var zipArchive = new ZipArchive(data, ZipArchiveMode.Read);
+            
+            foreach (var entry in zipArchive.Entries)
+            {
+                if (entry.FullName != targetFilePath)
+                {
+                    continue;
+                }
+
+                using var stream = entry.Open();
+                using var memoryStream = new MemoryStream();
+                stream.CopyTo(memoryStream);
+
+                return Encoding.UTF8.GetString(memoryStream.ToArray());
+            }
+
+            return null;
         }
     }
 }
