@@ -37,7 +37,7 @@ jobs:
       run: dotnet build -c Release LicenseIdentifiers/LicenseIdentifiers.csproj --no-restore
       
     - name: Pack LicenseIdentifiers
-      run: dotnet pack LicenseIdentifiers/LicenseIdentifiers.csproj
+      run: dotnet pack LicenseIdentifiers/LicenseIdentifiers.csproj -c Release -p:NuspecFile="LicenseIdentifiers.nuspec"
       
     - name: Publish LicenseIdentifiers
       run: dotnet nuget push "**/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
