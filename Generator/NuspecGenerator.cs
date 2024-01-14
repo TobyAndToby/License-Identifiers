@@ -24,7 +24,7 @@ namespace Generator
     <tags>license,licence,SPDX,OSS,parse</tags>
   </metadata>
   <files>
-    <file src=""bin/Release/net50/LicenseIdentifiers.dll"" target=""lib"" />
+    <file src=""bin/Release/netstandard2.0/LicenseIdentifiers.dll"" target=""lib"" />
   </files>
 </package>";
         }

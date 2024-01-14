@@ -36,8 +36,8 @@ jobs:
           name: nuget-packages
           path: "**/*.nupkg"
 
-#      - name: Publish LicenseIdentifiers
-#        run: dotnet nuget push "**/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+  #      - name: Publish LicenseIdentifiers
+  #        run: dotnet nuget push "**/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
 
   create-release:
     name: Create GitHub Release
@@ -53,7 +53,7 @@ jobs:
       - name: Calculate Version
         id: calculate-version
         run: |
-          $rcVersion = ${{ github.ref }} -Replace "^refs/tags/release/"
+          $rcVersion = "${{ github.ref }}" -Replace "^refs/tags/release/"
           $releaseVersion = $rcVersion -Replace "-rc.*$"
           Write-Host "Release version: $releaseVersion"
           "version=$releaseVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
@@ -84,8 +84,8 @@ jobs:
 
       - name: Debug Logs
         run: |
-         Write-Host "Tag name: ${{ github.ref }}"
-         Write-Host "Body: ${{ steps.create-release-body.outputs.body }}"
+          Write-Host "Tag name: ${{ github.ref }}"
+          Write-Host "Body: ${{ steps.create-release-body.outputs.body }}"
 
 #      - name: Create Release
 #        uses: softprops/action-gh-release@v1
