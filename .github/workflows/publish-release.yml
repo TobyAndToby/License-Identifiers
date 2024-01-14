@@ -1,0 +1,97 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - releases/*-rc*
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  publish:
+    name: Publish License Identifiers
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build LicenseIdentifiers
+        run: dotnet build LicenseIdentifiers/LicenseIdentifiers.csproj -c Release
+
+      - name: Pack LicenseIdentifiers
+        run: dotnet pack LicenseIdentifiers/LicenseIdentifiers.csproj -c Release -p:NuspecFile="LicenseIdentifiers.nuspec"
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: "**/*.nupkg"
+
+#      - name: Publish LicenseIdentifiers
+#        run: dotnet nuget push "**/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+
+  create-release:
+    name: Create GitHub Release
+    needs:
+      - publish
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Calculate Version
+        id: calculate-version
+        run: |
+          $rcVersion = ${{ github.ref }} -Replace "^refs/tags/release/"
+          $releaseVersion = $rcVersion -Replace "-rc.*$"
+          Write-Host "Release version: $releaseVersion"
+          "version=$releaseVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Create Release Body
+        id: create-release-body
+        run: |
+          $body = @"
+          # Release v{{ steps.calculate-version.outputs.version }}
+
+          ## Install
+
+          ``````powershell
+          # .NET CLI
+          dotnet add package LicenseIdentifiers --version {{ steps.calculate-version.outputs.version }}
+
+          # Package Manager
+          Install-Package LicenseIdentifiers -Version {{ steps.calculate-version.outputs.version }}
+          ``````
+          "@
+          Write-Host "Release body: $body"
+          "body=$body" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Download Nupkg Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+
+      - name: Debug Logs
+        run: |
+         Write-Host "Tag name: ${{ github.ref }}"
+         Write-Host "Body: ${{ steps.create-release-body.outputs.body }}"
+
+#      - name: Create Release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: ${{ github.ref }}
+#          generate_release_notes: true
+#          body: ${{ steps.create-release-body.outputs.body }}
+#          files: "**/*.nupkg"
+#          draft: true
