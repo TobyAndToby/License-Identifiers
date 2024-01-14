@@ -1,0 +1,106 @@
+name: Create Release Candidate
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  get-spdx-version:
+    name: Get SPDX Version
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      spdx-version: ${{ steps.get-latest.outputs.version }}
+
+    steps:
+      - name: Get latest release
+        id: get-latest
+        run: |
+          $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/spdx/license-list-data/releases/latest"
+          $tagName = $latestRelease.tag_name
+          $tagVersion = $tagName -Replace "^v"
+          Write-Host "Using version: $tagVersion"
+          "version=$tagVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+  generate:
+    name: Run Generator
+
+    needs: get-spdx-version
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      should-commit: ${{ steps.git-check.outputs.should-commit }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Run Generator
+        run: dotnet run --project Generator/Generator.csproj
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          $shouldCommit = "$(git diff)" ? 1 : 0
+          Write-Host "Should commit: $shouldCommit"
+          "should-commit=$shouldCommit" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Create artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-code
+          path: ./LicenseIdentifiers
+          retention-days: 1
+
+  push:
+    name: Push Changes
+
+    needs:
+      - get-spdx-version
+      - generate
+
+    runs-on: ubuntu-latest
+
+    if: ${{ needs.generate.outputs.should-commit == 1 }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-code
+          path: ./LicenseIdentifiers
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Update generated code"
+
+      - name: Tag changes
+        run: |
+          $rcVersion = "${{ needs.get-spdx-version.outputs.spdx-version }}-rc.${{ github.run_attempt }}"
+          $rcTagName = "releases/$rcVersion"
+          git tag -a "$rcTagName" -m "Release Candidate v$rcVersion"
+
+      - name: Push changes
+        run: |
+          git push --follow-tags --atomic
