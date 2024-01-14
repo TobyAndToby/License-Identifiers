@@ -36,8 +36,8 @@ jobs:
           name: nuget-packages
           path: "**/*.nupkg"
 
-  #      - name: Publish LicenseIdentifiers
-  #        run: dotnet nuget push "**/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      - name: Publish LicenseIdentifiers
+        run: dotnet nuget push "**/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
 
   create-release:
     name: Create GitHub Release
@@ -74,7 +74,7 @@ jobs:
           Install-Package LicenseIdentifiers -Version {{ steps.calculate-version.outputs.version }}
           ``````
           "@
-          Write-Host "Release body: $body"
+
           "body=$body" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Download Nupkg Artifact
@@ -82,16 +82,11 @@ jobs:
         with:
           name: nuget-packages
 
-      - name: Debug Logs
-        run: |
-          Write-Host "Tag name: ${{ github.ref }}"
-          Write-Host "Body: ${{ steps.create-release-body.outputs.body }}"
-
-#      - name: Create Release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          tag_name: ${{ github.ref }}
-#          generate_release_notes: true
-#          body: ${{ steps.create-release-body.outputs.body }}
-#          files: "**/*.nupkg"
-#          draft: true
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          generate_release_notes: true
+          body: ${{ steps.create-release-body.outputs.body }}
+          files: "**/*.nupkg"
+          draft: true
