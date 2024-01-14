@@ -50,6 +50,9 @@ jobs:
       - name: Run Generator
         run: dotnet run --project Generator/Generator.csproj
 
+      - name: Build LicenseIdentifiers
+        run: dotnet build LicenseIdentifiers/LicenseIdentifiers.csproj
+
       - name: Check for changes
         id: git-check
         run: |
