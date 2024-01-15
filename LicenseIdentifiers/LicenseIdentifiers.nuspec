@@ -2,16 +2,15 @@
 <package>
   <metadata>
     <id>LicenseIdentifiers</id>
-    <version>3.12</version>
+    <version>3.22</version>
     <authors>TobyAndToby</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <license type="expression">ISC</license>
     <projectUrl>http://github.com/TobyAndToby/License-Identifiers</projectUrl>
-    <description>SPDX-compliant license enum class. Validate and parse all verified SPDX license
-      identifiers from version SPDX 3.12.</description>
-    <releaseNotes>SPDX Data for the Version 3.12 of the license list
+    <description>SPDX-compliant license enum class. Validate and parse all verified SPDX license identifiers from SPDX version 3.22.</description>
+    <releaseNotes>SPDX Data for the Version 3.22 of the license list
 
-      See https://github.com/spdx/license-list-XML/releases/tag/v3.12 for summary of changes</releaseNotes>
+See https://github.com/spdx/license-list-XML/releases/tag/v3.22 for summary of changes</releaseNotes>
     <tags>license,licence,SPDX,OSS,parse</tags>
   </metadata>
   <files>
