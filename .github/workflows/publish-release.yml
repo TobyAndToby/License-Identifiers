@@ -75,7 +75,9 @@ jobs:
           ``````
           "@
 
-          "body=$body" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "body<<EOF" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf-8 -Append
+          "body=$body" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf-8 -Append
+          "EOF" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf-8 -Append
 
       - name: Download Nupkg Artifact
         uses: actions/download-artifact@v4
