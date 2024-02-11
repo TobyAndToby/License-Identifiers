@@ -15,28 +15,6 @@ namespace Generator
         private static readonly Regex IllegalCharacters = new Regex("[^a-zA-Z0-9_]");
 
         /// <summary>
-        /// Given a JSON file location, read and parse into specified generic type. Logs exceptions.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="fileLocation"></param>
-        /// <returns></returns>
-        public static T ParseJson<T>(string raw) where T : new()
-        {
-            var data = new T();
-
-            try
-            {
-                data = JsonSerializer.Deserialize<T>(raw, JsonOptions);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-
-            return data;
-        }
-
-        /// <summary>
         /// Takes a license ID and formats it to be a valid C# variable name.
         /// <code>gpl-1.0+ -> GPL_1_0_PLUS</code>
         /// </summary>
@@ -65,27 +43,6 @@ namespace Generator
         public static string SpreadArrayValues(IEnumerable<string> source)
         {
             return string.Join(',', source.Select(value => $"\"{value}\""));
-        }
-
-        public static string GetFileContentsFromZip(Stream data, string targetFilePath)
-        {
-            using var zipArchive = new ZipArchive(data, ZipArchiveMode.Read);
-            
-            foreach (var entry in zipArchive.Entries)
-            {
-                if (entry.FullName != targetFilePath)
-                {
-                    continue;
-                }
-
-                using var stream = entry.Open();
-                using var memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
-
-                return Encoding.UTF8.GetString(memoryStream.ToArray());
-            }
-
-            return null;
         }
     }
 }
