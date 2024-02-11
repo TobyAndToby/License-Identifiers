@@ -17,13 +17,18 @@ jobs:
 
     outputs:
       spdx-version: ${{ steps.get-latest.outputs.version }}
+      spdx-tag: ${{ steps.get-latest.outputs.tag }}
 
     steps:
       - name: Get latest release
         id: get-latest
         run: |
           $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/spdx/license-list-data/releases/latest"
+
           $tagName = $latestRelease.tag_name
+          Write-Host "Using tag: $tagName"
+          "tag=$tagName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
           $tagVersion = $tagName -Replace "^v"
           Write-Host "Using version: $tagVersion"
           "version=$tagVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
@@ -48,7 +53,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Run Generator
-        run: dotnet run --project Generator/Generator.csproj
+        run: dotnet run --project Generator/Generator.csproj -- ${{ needs.get-spdx-version.outputs.spdx-tag }}
 
       - name: Build LicenseIdentifiers
         run: dotnet build LicenseIdentifiers/LicenseIdentifiers.csproj
