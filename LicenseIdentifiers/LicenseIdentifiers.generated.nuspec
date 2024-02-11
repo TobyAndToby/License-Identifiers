@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata>
+    <id>LicenseIdentifiers</id>
+    <version>3.23</version>
+    <authors>TobyAndToby</authors>
+    <license type="expression">ISC</license>
+    <repository url="https://github.com/TobyAndToby/License-Identifiers" />
+    <tags>license licence SPDX OSS parse</tags>
+    <description>SPDX-compliant license enum class. Validate and parse all verified SPDX license identifiers from SPDX version 3.23.</description>
+    <releaseNotes>https://github.com/spdx/license-list-data/releases/tag/v3.23</releaseNotes>
+  </metadata>
+</package>

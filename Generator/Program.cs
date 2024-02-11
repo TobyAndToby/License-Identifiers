@@ -8,7 +8,7 @@ namespace Generator
     class Program
     {
         private static readonly string LICENSES_OUTPUT_LOCATION = GetProjectFolderPath() + LicenseIdentifierFileComponents.NAME;
-        private static readonly string NUSPEC_OUTPUT_LOCATION = GetProjectFolderPath() + "LicenseIdentifiers.nuspec";
+        private static readonly string NUSPEC_OUTPUT_LOCATION = GetProjectFolderPath() + "LicenseIdentifiers.generated.nuspec";
 
         private static readonly HttpClient client = new();
 
@@ -35,7 +35,7 @@ namespace Generator
 
             var version = GetVersion(tag);
 
-            await UpdateNuspecFile(tag, version);
+            NuspecGenerator.GenerateFile(NUSPEC_OUTPUT_LOCATION, version, tag);
         }
 
         private static void GenerateLicensesClass(List<License> licenses, string destination)
@@ -63,12 +63,6 @@ namespace Generator
             outputFile.Write(LicenseIdentifierFileComponents.LICENSE_CONSTRUCTOR);
             outputFile.Write(LicenseIdentifierFileComponents.LICENSE_PROPERTIES);
             outputFile.Write(LicenseIdentifierFileComponents.FOOTER);
-        }
-
-        private static async Task UpdateNuspecFile(string tag, string version)
-        {
-            var nuspecContents = NuspecGenerator.GenerateContent(version, tag);
-            await File.WriteAllTextAsync(NUSPEC_OUTPUT_LOCATION, nuspecContents);
         }
 
         private static string GetVersion(string tag)
